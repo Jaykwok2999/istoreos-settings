@@ -119,6 +119,19 @@ uci -q batch <<-EOF
 EOF
 uci commit system
 
+# log level
+uci set system.@system[0].conloglevel='1'
+uci set system.@system[0].cronloglevel='9'
+uci commit system
+
+# zram
+mem_total=$(grep MemTotal /proc/meminfo | awk '{print $2}')
+zram_size=$(echo | awk "{print int($mem_total*0.25/1024)}")
+uci set system.@system[0].zram_size_mb="$zram_size"
+uci set system.@system[0].zram_comp_algo='lz4'
+uci commit system
+
+
 # 设置默认主题为argon
 if [ "$VERSION_TYPE" != "minimal" ] && [ -z "$(uci -q get luci.main.pollinterval)" ]; then
     uci set luci.main.mediaurlbase='/luci-static/argon'
@@ -137,6 +150,14 @@ if [ $(uci -q get luci.diag.ping) = "openwrt.org" ]; then
     uci set luci.diag.route='www.baidu.com'
     uci commit luci
 fi
+
+# packet steering
+uci -q get network.globals.packet_steering > /dev/null || {
+    uci set network.globals='globals'
+    uci set network.globals.packet_steering=2
+    uci set network.globals.steering_flows='128'
+    uci commit network
+}
 
 # 设置主机名映射，解决安卓原生TV首次连不上网的问题
 uci add dhcp domain
