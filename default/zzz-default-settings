@@ -7,7 +7,7 @@
 [ "$OPENWRT_BOARD" = "armsr/armv8" ] && alias board_name="echo armsr,armv8"
 
 # OTA
-if [ "$VERSION_TYPE" = "24.10.1" ]; then
+if [ "$VERSION_TYPE" = "minimal" ]; then
     OTA_URL="https://raw.githubusercontent.com/Jaykwok2999/istoreos-actions/refs/heads/api/fw.json"
 else
     OTA_URL="https://raw.githubusercontent.com/Jaykwok2999/istoreos-actions/refs/heads/api/fw.json"
