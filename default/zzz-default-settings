@@ -1,6 +1,5 @@
 #!/bin/sh
 
-# timezone
 uci -q batch <<-EOF
 	set system.@system[0].hostname='iStoreOS'
 	set system.@system[0].timezone='CST-8'
@@ -73,8 +72,5 @@ uci commit dhcp
 # disable coremark
 sed -i '/coremark/d' /etc/crontabs/root
 crontab /etc/crontabs/root
-
-# init
-devices_setup
 
 exit 0
